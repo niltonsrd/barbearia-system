@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Cadastro{% endblock %}
+
+{% block content %}
+<section class="card narrow">
+  <h1>📝 Criar conta</h1>
+
+  <form method="POST">
+    <input name="nome" placeholder="Nome completo" required>
+    <input name="email" placeholder="Email" required>
+    <input name="telefone" placeholder="Telefone">
+    <input name="senha" type="password" placeholder="Senha" required>
+    <button class="btn primary full">Cadastrar</button>
+  </form>
+</section>
+{% endblock %}

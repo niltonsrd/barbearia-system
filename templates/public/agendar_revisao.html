@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Revisar agendamento{% endblock %}
+
+{% block content %}
+<section class="fade-in">
+    <h1>Revisar agendamento</h1>
+    <p>Confira os dados antes de confirmar</p>
+
+    <div class="card-app">
+        <p><strong>Serviço:</strong> {{ servico.nome }}</p>
+        <p><strong>Preço:</strong> R$ {{ "%.2f"|format(servico.preco) }}</p>
+        <p><strong>Barbeiro:</strong> {{ barbeiro.nome }}</p>
+        <p><strong>Data:</strong> {{ data }}</p>
+        <p><strong>Horário:</strong> {{ hora }}</p>
+    </div>
+
+    <form method="POST" style="margin-top:20px">
+        <button class="btn-primary">
+            Confirmar agendamento
+        </button>
+        <button type="button" class="btn-primary" onclick="window.location.href='{{ voltar_url }}'">
+            ← Voltar
+        </button>
+    </form>
+</section>
+{% endblock %}

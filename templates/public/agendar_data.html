@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}Escolher horário{% endblock %}
+
+{% block content %}
+<section class="fade-in">
+  <h1>Escolha seu horário</h1>
+  <p>Horários disponíveis para este barbeiro</p>
+
+  <!-- DADOS DO AGENDAMENTO -->
+  <script id="agendamento-data" type="application/json">
+    {
+      "barbeiro_id": {{ barbeiro_id }}
+    }
+  </script>
+
+  <!-- FILTRO DE DIAS -->
+  <div class="dias-filtro">
+    <button type="button" class="filtro-btn active" data-dias="7">7 dias</button>
+    <button type="button" class="filtro-btn" data-dias="14">14 dias</button>
+    <button type="button" class="filtro-btn" data-dias="30">30 dias</button>
+  </div>
+
+  <!-- AGENDA -->
+  <div id="agenda" class="agenda-container">
+    <p class="agenda-loading">Carregando agenda...</p>
+  </div>
+
+  <!-- CONFIRMAÇÃO -->
+  <form method="POST" id="formConfirmar">
+    <input type="hidden" name="data" id="dataSelecionada">
+    <input type="hidden" name="hora" id="horaSelecionada">
+
+    <button type="submit" class="btn-primary" disabled id="confirmarBtn">
+      Confirmar horário
+    </button>
+    <button type="button" class="btn-primary" onclick="window.location.href='{{ voltar_url }}'">
+      ← Voltar
+    </button>
+
+
+  </form>
+</section>
+
+<script>
+  /* ========================
+     VARIÁVEIS
+  ========================= */
+  const agendaEl = document.getElementById("agenda");
+  const dataInput = document.getElementById("dataSelecionada");
+  const horaInput = document.getElementById("horaSelecionada");
+  const confirmarBtn = document.getElementById("confirmarBtn");
+
+  const agendamentoData = JSON.parse(
+    document.getElementById("agendamento-data").textContent
+  );
+
+  let barbeiroId = agendamentoData.barbeiro_id;
+  let diasSelecionados = 7;
+
+  /* ========================
+     CARREGAR AGENDA
+  ========================= */
+  async function carregarAgenda() {
+    agendaEl.innerHTML = `<p class="agenda-loading">Carregando horários...</p>`;
+    confirmarBtn.disabled = true;
+    dataInput.value = "";
+    horaInput.value = "";
+
+    try {
+      const res = await fetch(`/api/agenda/${barbeiroId}?dias=${diasSelecionados}`);
+      const agenda = await res.json();
+
+      agendaEl.innerHTML = "";
+
+      if (!agenda.length) {
+        agendaEl.innerHTML = "<p>Nenhum horário disponível.</p>";
+        return;
+      }
+
+      agenda.forEach(dia => {
+        const card = document.createElement("div");
+        card.className = "agenda-dia";
+
+        card.innerHTML = `
+          <h3>
+            ${dia.dia}
+            <span>${formatarData(dia.data)}</span>
+          </h3>
+          <div class="slots"></div>
+        `;
+
+        const slotsEl = card.querySelector(".slots");
+
+        dia.slots.forEach(slot => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "slot-btn";
+          btn.textContent = slot.hora;
+
+          if (!slot.disponivel) {
+            btn.classList.add("ocupado");
+            btn.disabled = true;
+          } else {
+            btn.addEventListener("click", () =>
+              selecionarHorario(dia.data, slot.hora, btn)
+            );
+          }
+
+          slotsEl.appendChild(btn);
+        });
+
+        agendaEl.appendChild(card);
+      });
+
+    } catch (e) {
+      agendaEl.innerHTML = "<p>Erro ao carregar agenda.</p>";
+      console.error(e);
+    }
+  }
+
+  /* ========================
+     SELECIONAR HORÁRIO
+  ========================= */
+  function selecionarHorario(data, hora, btn) {
+      dataInput.value = data;
+      horaInput.value = hora;
+
+      confirmarBtn.disabled = false;
+
+      document.querySelectorAll(".slot-btn").forEach(b =>
+        b.classList.remove("selected")
+      );
+
+      btn.classList.add("selected");
+    }
+
+
+  /* ========================
+     FILTRO DE DIAS
+  ========================= */
+  document.querySelectorAll(".filtro-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".filtro-btn").forEach(b =>
+        b.classList.remove("active")
+      );
+
+      btn.classList.add("active");
+      diasSelecionados = btn.dataset.dias;
+      carregarAgenda();
+    });
+  });
+
+  /* ========================
+     UTIL
+  ========================= */
+  function formatarData(dataISO) {
+    const d = new Date(dataISO + "T00:00");
+    return d.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit"
+    });
+  }
+
+  /* ========================
+     INIT
+  ========================= */
+  carregarAgenda();
+</script>
+{% endblock %}

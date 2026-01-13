@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Agendamentos{% endblock %}
+
+{% block content %}
+<section class="fade-in admin-agenda">
+
+  <h1>📅 Agendamentos</h1>
+  <p class="muted">Controle total dos horários da barbearia</p>
+
+  <!-- TABS -->
+  <div class="agenda-tabs">
+    <button class="tab active" data-tab="hoje">Hoje</button>
+    <button class="tab" data-tab="pendentes">Pendentes</button>
+    <button class="tab" data-tab="historico">Histórico</button>
+  </div>
+
+  <!-- HOJE -->
+  <div class="tab-content active" id="hoje">
+    {% if not hoje %}
+    <div class="empty-state">Nenhum atendimento hoje</div>
+    {% endif %}
+
+    {% for a in hoje %}
+    <div class="agenda-card {{ a.status }}">
+      <div>
+        <strong>{{ a.hora }}</strong> • {{ a.cliente }}
+        <div class="muted">{{ a.servico }} — {{ a.barbeiro }}</div>
+      </div>
+
+      <div class="actions">
+        {% if a.status == 'pendente' %}
+        <a href="/admin/agendamentos/status/{{ a.id }}/confirmado" class="btn success">Confirmar</a>
+        <a href="/admin/agendamentos/status/{{ a.id }}/cancelado" class="btn danger">Cancelar</a>
+        {% elif a.status == 'confirmado' %}
+        <a href="/admin/agendamentos/status/{{ a.id }}/finalizado" class="btn info">Finalizar</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- PENDENTES -->
+  <div class="tab-content" id="pendentes">
+    {% if not pendentes %}
+    <div class="empty-state">Nenhum agendamento pendente</div>
+    {% endif %}
+
+    {% for a in pendentes %}
+    <div class="agenda-card pendente">
+      <div>
+        <strong>{{ a.data }} {{ a.hora }}</strong> • {{ a.cliente }}
+        <div class="muted">{{ a.servico }} — {{ a.barbeiro }}</div>
+      </div>
+
+      <div class="actions">
+        <a href="/admin/agendamentos/status/{{ a.id }}/confirmado" class="btn success">Confirmar</a>
+        <a href="/admin/agendamentos/status/{{ a.id }}/cancelado" class="btn danger">Cancelar</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- HISTÓRICO -->
+  <div class="tab-content" id="historico">
+    {% if not historico %}
+    <div class="empty-state">Nenhum histórico</div>
+    {% endif %}
+
+    {% for a in historico %}
+    <div class="agenda-card {{ a.status }}">
+      <div>
+        <strong>{{ a.data }} {{ a.hora }}</strong> • {{ a.cliente }}
+        <div class="muted">{{ a.servico }} — {{ a.barbeiro }}</div>
+      </div>
+
+      <span class="status {{ a.status }}">{{ a.status|upper }}</span>
+    </div>
+    {% endfor %}
+  </div>
+
+</section>
+
+<script>
+  document.querySelectorAll(".tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+
+      btn.classList.add("active");
+      document.getElementById(btn.dataset.tab).classList.add("active");
+    });
+  });
+</script>
+{% endblock %}

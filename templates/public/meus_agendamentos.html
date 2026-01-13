@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Meus agendamentos{% endblock %}
+
+{% block content %}
+<section class="fade-in">
+
+  <h1>📅 Meus agendamentos</h1>
+  <p class="muted">Acompanhe seus horários marcados</p>
+
+  {% if not agendamentos %}
+  <div class="empty-state">
+    <p>Você ainda não tem agendamentos.</p>
+    <a href="/agendar/servico" class="btn-primary">
+      Agendar agora
+    </a>
+  </div>
+  {% endif %}
+
+  <div class="agenda-list">
+    {% for a in agendamentos %}
+    <div class="agenda-card status-{{ a.status }}">
+
+      <div class="agenda-header">
+        <h3>{{ a.servico }}</h3>
+        <span class="status-badge {{ a.status }}">
+          {{ a.status|upper }}
+        </span>
+      </div>
+      <div class="agenda-info">
+        <div>💈 {{ a.barbeiro or "A definir" }}</div>
+        <div>📅 {{ a.data.split("-")[2] }}/{{ a.data.split("-")[1] }}/{{ a.data.split("-")[0] }}</div>
+        <div>⏰ {{ a.hora }}</div>
+      </div>
+      
+      {% if a.status in ["pendente", "confirmado"] %}
+      <button type="button" class="btn-danger-outline" data-id="{{ a.id }}" onclick="abrirModalCancelamento(this)">
+        Cancelar agendamento
+      </button>
+
+
+
+      {% endif %}
+      
+    </div>
+    {% endfor %}
+  </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("modal-cancelar");
+    const linkConfirmar = document.getElementById("confirmarCancelamento");
+    const btnVoltar = document.getElementById("btn-voltar");
+
+    window.abrirModalCancelamento = function (btn) {
+      const id = btn.dataset.id;
+      linkConfirmar.href = "/cancelar-agendamento/" + id;
+      modal.classList.add("active");
+    }
+
+    function fecharModal() {
+      modal.classList.remove("active");
+    }
+
+    btnVoltar.addEventListener("click", fecharModal);
+
+    modal.addEventListener("click", e => {
+      if (e.target === modal) fecharModal();
+    });
+  });
+</script>
+
+
+<!-- MODAL CANCELAMENTO -->
+<div id="modal-cancelar" class="modal-overlay">
+  <div class="modal-card">
+    <h3>⚠️ Atenção</h3>
+    <p>Tem certeza que deseja cancelar este agendamento?</p>
+
+    <div class="modal-actions">
+      <button type="button" class="btn-primary2" id="btn-voltar">
+        Voltar
+      </button>
+
+      <a id="confirmarCancelamento" class="btn-danger-outline2">
+        Sim, cancelar
+      </a>
+    </div>
+  </div>
+</div>
+
+</section>
+{% endblock %}

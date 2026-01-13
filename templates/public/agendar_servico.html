@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Escolher serviço{% endblock %}
+
+{% block content %}
+
+<h1>Escolha o serviço</h1>
+<p class="muted">Selecione o serviço desejado</p>
+
+<form method="POST" class="services-grid">
+
+    {% for s in servicos %}
+    <label class="service-card" data-image="{{ s.imagem or '' }}">
+    
+        <input type="radio" name="servico_id" value="{{ s.id }}" required>
+    
+        <div class="service-overlay"></div>
+    
+        <div class="service-info">
+            <strong>{{ s.nome }}</strong>
+            <span class="price">R$ {{ "%.2f"|format(s.preco) }}</span>
+            {% if s.descricao %}
+            <small>{{ s.descricao }}</small>
+            {% endif %}
+        </div>
+    
+    </label>
+    {% endfor %}
+
+
+    <button class="btn-primary">
+        Continuar →
+    </button>
+    <button type="button" class="btn-primary" onclick="window.location.href='{{ voltar_url }}'">
+        ← Voltar
+    </button>
+
+</form>
+
+{% endblock %}

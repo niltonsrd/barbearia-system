@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Meu perfil{% endblock %}
+
+{% block content %}
+<section class="fade-in profile-page">
+
+    <!-- CARD PERFIL -->
+    <div class="profile-card">
+
+        <div class="profile-avatar">
+            {{ cliente.nome[0]|upper }}
+        </div>
+
+        <h2>{{ cliente.nome }}</h2>
+        <p class="profile-email">{{ cliente.email }}</p>
+
+    </div>
+
+    <!-- AÇÕES -->
+    <div class="profile-actions">
+
+        <a href="/meus-agendamentos" class="profile-action">
+            📅 Meus agendamentos
+        </a>
+
+        <!-- BOTÃO ABRE MODAL -->
+        <button type="button" class="profile-action" onclick="abrirModalSenha()">
+            <span>🔒 Alterar senha</span>
+            <small>Atualizar sua senha</small>
+        </button>
+
+
+        <a href="/logout" class="profile-action danger">
+            🚪 Sair da conta
+        </a>
+
+    </div>
+
+</section>
+
+<!-- MODAL ALTERAR SENHA -->
+<div id="modalSenha" class="modal-overlay" style="display:none;">
+    <div class="modal-card">
+
+        <h3>🔒 Alterar senha</h3>
+
+        <form method="POST" action="/alterar-senha">
+
+            <input type="password" name="senha_atual" placeholder="Senha atual" required>
+
+            <input type="password" name="nova_senha" placeholder="Nova senha" required>
+
+            <input type="password" name="confirmar_senha" placeholder="Confirmar nova senha" required>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" onclick="fecharModalSenha()">
+                    Cancelar
+                </button>
+
+                <button type="submit" class="btn-primary">
+                    Salvar senha
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<script>
+    function abrirModalSenha() {
+        document.getElementById("modalSenha").style.display = "flex";
+    }
+
+    function fecharModalSenha() {
+        document.getElementById("modalSenha").style.display = "none";
+    }
+</script>
+{% endblock %}

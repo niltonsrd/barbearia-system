@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Barbeiros{% endblock %}
+
+{% block content %}
+<section class="fade-in">
+
+  <h1>💈 Barbeiros</h1>
+  <p class="muted">Gerencie sua equipe de profissionais</p>
+
+  <!-- ===================== -->
+  <!-- NOVO BARBEIRO -->
+  <!-- ===================== -->
+  <form method="POST" enctype="multipart/form-data" class="card-app">
+
+    <h3>➕ Novo barbeiro</h3>
+
+    <label>Nome do barbeiro</label>
+    <input type="text" name="nome" placeholder="Ex: João Silva" required>
+
+    <label>Descrição / especialidade</label>
+    <textarea name="bio" rows="3" placeholder="Ex: Especialista em degradê e barba clássica"></textarea>
+
+    <label class="upload-label">
+      📷 Foto do barbeiro
+      <input type="file" name="foto" accept="image/*" hidden>
+    </label>
+
+    <button class="btn-primary full">
+      Adicionar barbeiro
+    </button>
+  </form>
+
+  <!-- ===================== -->
+  <!-- LISTA DE BARBEIROS -->
+  <!-- ===================== -->
+  <div class="barbeiros-grid">
+
+    {% for b in barbeiros %}
+    <div class="barbeiro-card {% if not b.ativo %}inativo{% endif %}">
+
+      <div class="barbeiro-avatar">
+        {% if b.foto %}
+        <img src="{{ url_for('static', filename='uploads/barbeiros/' ~ b.foto) }}">
+        {% else %}
+        <span>{{ b.nome[0]|upper }}</span>
+        {% endif %}
+      </div>
+
+      <div class="barbeiro-info">
+        <h4>{{ b.nome }}</h4>
+        <p>{{ b.bio or "Sem descrição" }}</p>
+
+        {% if b.ativo %}
+        <span class="status ativo">● Ativo</span>
+        {% else %}
+        <span class="status inativo">● Inativo</span>
+        {% endif %}
+      </div>
+
+      <a href="{{ url_for('admin.toggle_barbeiro', id=b.id) }}"
+        class="btn-danger-outline {% if b.ativo %}{% else %}success{% endif %}">
+        {% if b.ativo %}Desativar{% else %}Ativar{% endif %}
+      </a>
+
+    </div>
+    {% endfor %}
+
+  </div>
+
+</section>
+{% endblock %}

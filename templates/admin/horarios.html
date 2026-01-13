@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}Horários{% endblock %}
+
+{% block content %}
+<section class="fade-in">
+
+    <h1>⏰ Horários</h1>
+    <p class="muted">Gerencie os horários disponíveis dos barbeiros</p>
+
+    <!-- ===================== -->
+    <!-- ADICIONAR HORÁRIO ÚNICO -->
+    <!-- ===================== -->
+    <form method="POST" action="{{ url_for('admin.add_horario') }}" class="card-app">
+
+        <h3>➕ Adicionar horário único</h3>
+
+        <label>Barbeiro</label>
+        <select name="barbeiro_id" required>
+            {% for b in barbeiros %}
+            <option value="{{ b.id }}">{{ b.nome }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Dia da semana</label>
+        <select name="dia_semana" required>
+            <option value="0">Domingo</option>
+            <option value="1">Segunda</option>
+            <option value="2">Terça</option>
+            <option value="3">Quarta</option>
+            <option value="4">Quinta</option>
+            <option value="5">Sexta</option>
+            <option value="6">Sábado</option>
+        </select>
+
+        <label>Hora</label>
+        <input type="time" name="hora" required>
+
+        <button class="btn-primary full">
+            Adicionar horário
+        </button>
+    </form>
+
+    <!-- ===================== -->
+    <!-- GERAR HORÁRIOS AUTOMÁTICOS -->
+    <!-- ===================== -->
+    <form method="POST" action="{{ url_for('admin.gerar_horarios') }}" class="card-app">
+
+        <h3>⚡ Gerar horários automaticamente</h3>
+
+        <label>Barbeiro</label>
+        <select name="barbeiro_id" required>
+            {% for b in barbeiros %}
+            <option value="{{ b.id }}">{{ b.nome }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Dia da semana</label>
+        <select name="dia_semana" required>
+            <option value="0">Domingo</option>
+            <option value="1">Segunda</option>
+            <option value="2">Terça</option>
+            <option value="3">Quarta</option>
+            <option value="4">Quinta</option>
+            <option value="5">Sexta</option>
+            <option value="6">Sábado</option>
+        </select>
+
+        <div class="grid-2">
+            <div>
+                <label>Hora início</label>
+                <input type="time" name="hora_inicio" required>
+            </div>
+
+            <div>
+                <label>Hora fim</label>
+                <input type="time" name="hora_fim" required>
+            </div>
+        </div>
+
+        <label>Duração (minutos)</label>
+        <input type="number" name="duracao" min="10" step="5" required>
+
+        <button class="btn-primary full">
+            Gerar horários
+        </button>
+    </form>
+
+    <!-- ===================== -->
+    <!-- FILTRO -->
+    <!-- ===================== -->
+    <form method="GET" class="card-app">
+        <label>Filtrar por dia</label>
+        <select name="dia" onchange="this.form.submit()">
+            <option value="">Todos</option>
+            <option value="0" {{ 'selected' if dia_filtro=='0' }}>Domingo</option>
+            <option value="1" {{ 'selected' if dia_filtro=='1' }}>Segunda</option>
+            <option value="2" {{ 'selected' if dia_filtro=='2' }}>Terça</option>
+            <option value="3" {{ 'selected' if dia_filtro=='3' }}>Quarta</option>
+            <option value="4" {{ 'selected' if dia_filtro=='4' }}>Quinta</option>
+            <option value="5" {{ 'selected' if dia_filtro=='5' }}>Sexta</option>
+            <option value="6" {{ 'selected' if dia_filtro=='6' }}>Sábado</option>
+        </select>
+    </form>
+
+    <!-- LISTA -->
+    <div class="card-app" style="margin-top:24px">
+    
+        {% set barbeiros_renderizados = [] %}
+    
+        {% for h in horarios %}
+        {% if h.barbeiro not in barbeiros_renderizados %}
+    
+        <div class="horario-barbeiro-card">
+            <h3>💈BARBEIRO: {{ h.barbeiro }}</h3>
+    
+            <div class="horario-chips">
+                {% for x in horarios if x.barbeiro == h.barbeiro %}
+    
+                <div class="chip {{ 'ativo' if x.ativo else 'inativo' }}">
+                    <span>{{ x.hora }}</span>
+    
+                    {% if x.ativo %}
+                    <a href="{{ url_for('admin.status_horario', id=x.id, acao='desativar') }}">✕</a>
+                    {% else %}
+                    <a href="{{ url_for('admin.status_horario', id=x.id, acao='ativar') }}">✓</a>
+                    {% endif %}
+    
+                    <a href="{{ url_for('admin.excluir_horario', id=x.id) }}"
+                        onclick="return confirm('Excluir este horário?')" class="chip-delete">🗑</a>
+                </div>
+    
+                {% endfor %}
+            </div>
+        </div>
+    
+        {% set _ = barbeiros_renderizados.append(h.barbeiro) %}
+        {% endif %}
+        {% endfor %}
+    
+        {% if not horarios %}
+        <p class="muted">Nenhum horário encontrado para este dia.</p>
+        {% endif %}
+    
+    </div>
+
+
+</section>
+{% endblock %}

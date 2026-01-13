@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Início | BarberPro{% endblock %}
+
+{% block content %}
+<main class="home-app">
+
+  <!-- HERO -->
+  <section class="home-hero">
+    <div class="hero-inner fade-up">
+
+      <span class="badge">Agendamento inteligente</span>
+
+      <h1>
+        Corte, barba e estilo<br>
+        <span>no nível que você merece</span>
+      </h1>
+
+      <p>
+        Escolha o barbeiro, o horário e confirme em segundos.
+        Sem filas, sem ligações.
+      </p>
+
+      <a href="/agendar/servico" class="btn-primary-glow">
+        Agendar meu próximo corte →
+      </a>
+
+    </div>
+  </section>
+
+  <!-- QUICK ACTIONS -->
+  <section class="quick-actions">
+    <a href="/agendar/servico" class="quick-card highlight">
+      <div class="icon-circle">➕</div>
+      <strong>Novo agendamento</strong>
+      <small>Reserve em segundos</small>
+    </a>
+
+    <a href="/meus-agendamentos" class="quick-card">
+      <div class="icon-circle">📅</div>
+      <strong>Minha agenda</strong>
+      <small>Ver horários marcados</small>
+    </a>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="home-features">
+    <div class="feature-card">
+      <div class="feature-icon">✂️</div>
+      <div class="feature-text">
+        <h3>Barbeiros confiáveis</h3>
+        <p>Profissionais experientes e avaliados.</p>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-text">
+        <h3>Sem filas</h3>
+        <p>Escolha o melhor dia e horário.</p>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">💎</div>
+      <div class="feature-text">
+        <h3>Experiência moderna</h3>
+        <p>Interface rápida e intuitiva.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+{% endblock %}

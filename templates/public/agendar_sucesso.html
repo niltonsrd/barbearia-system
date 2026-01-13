@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Agendamento confirmado{% endblock %}
+
+{% block content %}
+<section class="fade-in success-page">
+
+    <div class="success-icon">✔</div>
+
+    <h1>Agendamento confirmado!</h1>
+    <p class="muted">
+        Seu horário foi reservado com sucesso.<br>
+        Estaremos te esperando 💈
+    </p>
+
+    <div class="card-app success-summary">
+        <h3>📋 Detalhes do agendamento</h3>
+
+        <ul>
+            <li><strong>Serviço:</strong> {{ servico }}</li>
+            <li><strong>Barbeiro:</strong> {{ barbeiro }}</li>
+            <li><strong>Data:</strong> {{ data | replace("-", "/") }}</li>
+            <li><strong>Horário:</strong> {{ hora }}</li>
+            <li><strong>Valor:</strong> R$ {{ "%.2f"|format(preco) }}</li>
+        </ul>
+    </div>
+
+    <div class="success-actions">
+        <a href="/meus-agendamentos" class="btn-primary">
+            Ver meus agendamentos
+        </a>
+
+        <a href="/" class="btn-secondary">
+            Voltar ao início
+        </a>
+    </div>
+
+</section>
+{% endblock %}

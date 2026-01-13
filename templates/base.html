@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}BarberPro{% endblock %}</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#0e0e11">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+
+  <link rel="manifest" href="/static/manifest.json">
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <span class="app-title">BarberPro</span>
+  </header>
+
+  <!-- CONTEÚDO -->
+  <main class="app-container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- BOTTOM NAV (sempre visível) -->
+  <nav class="bottom-nav">
+
+    <a href="/" class="nav-item {% if request.path == '/' %}active{% endif %}">
+      <span>🏠</span>
+      <small>Início</small>
+    </a>
+
+    <a href="/meus-agendamentos"
+      class="nav-item {% if request.path.startswith('/meus-agendamentos') %}active{% endif %}">
+      <span>📅</span>
+      <small>Agenda</small>
+    </a>
+
+    <a href="/agendar/servico" class="nav-item nav-main {% if request.path.startswith('/agendar') %}active{% endif %}">
+      ➕
+    </a>
+
+    <a href="/perfil" class="nav-item {% if request.path.startswith('/perfil') %}active{% endif %}">
+      <span>👤</span>
+      <small>Perfil</small>
+    </a>
+
+    {% if session.get("is_admin") %}
+    <a href="/admin" class="nav-item admin-nav {% if request.path.startswith('/admin') %}active{% endif %}">
+      <span>⚙️</span>
+      <small>Admin</small>
+    </a>
+    {% endif %}
+
+  </nav>
+
+
+  <div id="toast" class="toast"></div>
+
+  <script src="/static/js/app.js"></script>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div id="modal-feedback" class="modal-overlay">
+    <div class="modal-card">
+  
+      {% for category, message in messages %}
+      {% if category == "success" %}
+      <h3 style="color:#00e676">✅ Sucesso</h3>
+      {% else %}
+      <h3 style="color:#ef5350">⚠️ Atenção</h3>
+      {% endif %}
+      <p>{{ message }}</p>
+      {% endfor %}
+  
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="fecharModalFeedback()">
+          Ok
+        </button>
+      </div>
+  
+    </div>
+  </div>
+  {% endif %}
+  {% endwith %}
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/static/service-worker.js");
+    }
+  </script>
+
+</body>
+<script>
+  function fecharModalFeedback() {
+    const modal = document.getElementById("modal-feedback");
+    if (modal) modal.remove();
+  }
+</script>
+
+</html>

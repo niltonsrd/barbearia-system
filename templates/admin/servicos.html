@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}Serviços{% endblock %}
+
+{% block content %}
+<section class="fade-in">
+
+  <h1>✂️ Serviços</h1>
+  <p>Gerencie os serviços da barbearia</p>
+
+  <!-- NOVO SERVIÇO -->
+  <form method="POST" enctype="multipart/form-data" class="card-app">
+
+    <h2>Novo serviço</h2>
+
+    <input type="text" name="nome" placeholder="Nome do serviço" required>
+
+    <input type="number" step="0.01" name="preco" placeholder="Preço (R$)" required>
+
+    <input type="number" name="duracao" placeholder="Duração (minutos)" required>
+
+    <!-- UPLOAD DE IMAGEM -->
+    <label class="upload-label">📷 Imagem do serviço</label>
+
+    <div class="upload-box">
+      <input type="file" name="imagem" id="imagem" accept="image/*" hidden>
+
+      <div class="upload-content" id="uploadTrigger">
+        <span class="upload-icon">🖼️</span>
+        <p>Clique ou arraste uma imagem</p>
+        <small>PNG ou JPG</small>
+      </div>
+
+      <img id="previewImagem" class="upload-preview" hidden>
+    </div>
+
+    <textarea name="descricao" class="textarea-dark" placeholder="Descrição do serviço (opcional)"></textarea>
+
+    <button class="btn-primary">
+      Adicionar serviço
+    </button>
+
+  </form>
+
+<!-- SERVIÇOS CADASTRADOS -->
+<h2 style="margin-top:32px">Serviços cadastrados</h2>
+
+<div class="admin-services-list">
+  {% for s in servicos %}
+  <div class="admin-service-card {% if not s.ativo %}inactive{% endif %}">
+
+    <!-- IMAGEM -->
+    <div class="admin-service-image">
+      {% if s.imagem %}
+      <img src="{{ url_for('static', filename='uploads/servicos/' ~ s.imagem) }}" alt="{{ s.nome }}">
+      {% else %}
+      <div class="admin-service-placeholder">✂️</div>
+      {% endif %}
+    </div>
+
+    <!-- INFO -->
+    <div class="admin-service-info">
+      <strong>{{ s.nome }}</strong>
+      <span>R$ {{ "%.2f"|format(s.preco) }}</span>
+      <small>{{ s.descricao or "Sem descrição" }}</small>
+    </div>
+
+    <!-- AÇÕES -->
+    <div class="admin-service-actions">
+      <a href="/admin/servicos/toggle/{{ s.id }}" class="btn-secondary small">
+        {{ "Desativar" if s.ativo else "Ativar" }}
+      </a>
+
+      <a href="/admin/servicos/excluir/{{ s.id }}" class="btn-danger-outline"
+        onclick="return confirm('Deseja excluir este serviço?');">
+        Excluir
+      </a>
+    </div>
+
+  </div>
+  {% endfor %}
+</div>
+
+
+  <!-- SCRIPT DENTRO DO CONTENT -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      document.querySelectorAll(".service-card[data-bg]").forEach(card => {
+        const bg = card.dataset.bg;
+        if (bg) {
+          card.style.backgroundImage = `url('${bg}')`;
+          card.style.backgroundSize = "cover";
+          card.style.backgroundPosition = "center";
+        }
+      });
+
+      const inputImagem = document.getElementById("imagem");
+      const preview = document.getElementById("previewImagem");
+      const trigger = document.getElementById("uploadTrigger");
+
+      if (trigger && inputImagem) {
+        trigger.addEventListener("click", () => inputImagem.click());
+
+        inputImagem.addEventListener("change", () => {
+          const file = inputImagem.files[0];
+          if (!file) return;
+
+          const reader = new FileReader();
+          reader.onload = e => {
+            preview.src = e.target.result;
+            preview.hidden = false;
+            trigger.style.display = "none";
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+    });
+  </script>
+
+
+
+
+</section>
+{% endblock %}

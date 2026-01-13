@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Alterar senha{% endblock %}
+
+{% block content %}
+<section class="fade-in profile-page">
+
+    <h1>🔒 Alterar senha</h1>
+    <p class="muted">Mantenha sua conta segura</p>
+
+    <form method="POST" class="card-app">
+
+        {% if erro %}
+        <div class="toast error">{{ erro }}</div>
+        {% endif %}
+
+        {% if sucesso %}
+        <div class="toast success">{{ sucesso }}</div>
+        {% endif %}
+
+        <input type="password" name="senha_atual" placeholder="Senha atual" required>
+
+        <input type="password" name="nova_senha" placeholder="Nova senha" required>
+
+        <input type="password" name="confirmar_senha" placeholder="Confirmar nova senha" required>
+
+        <button class="btn-primary">
+            Salvar nova senha
+        </button>
+
+        <button type="button" class="btn-primary" onclick="history.back()">
+            Voltar
+        </button>
+
+    </form>
+
+</section>
+{% endblock %}

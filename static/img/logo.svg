@@ -1,0 +1,7 @@
+<svg width="220" height="60" viewBox="0 0 220 60" xmlns="http://www.w3.org/2000/svg">
+  <rect width="220" height="60" rx="14" fill="#0f0f11"/>
+  <text x="20" y="40" font-size="28" fill="#d4af37"
+        font-family="Segoe UI, Arial, sans-serif" font-weight="700">
+    💈 BarberPro
+  </text>
+</svg>

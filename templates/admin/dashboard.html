@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | Admin{% endblock %}
+
+{% block content %}
+
+<section class="admin-dashboard fade-in">
+
+  <!-- HEADER -->
+  <header class="admin-header">
+    <h1>👋 Olá, {{ session.admin_nome or 'Admin' }}</h1>
+    <p>Visão geral da sua barbearia hoje</p>
+  </header>
+
+  <!-- MÉTRICAS -->
+  <section class="admin-stats">
+
+    <a href="/admin/agendamentos" class="stat-card">
+      <strong>{{ total_agendamentos or 0 }}</strong>
+      <span>Agendamentos</span>
+    </a>
+
+    <a href="/admin/agendamentos?status=pendente" class="stat-card warning">
+      <strong>{{ total_pendentes or 0 }}</strong>
+      <span>Pendentes</span>
+    </a>
+
+    <a href="/admin/servicos" class="stat-card">
+      <strong>{{ total_servicos or 0 }}</strong>
+      <span>Serviços ativos</span>
+    </a>
+
+    <div class="stat-card muted">
+      <strong>{{ total_clientes or 0 }}</strong>
+      <span>Clientes</span>
+    </div>
+
+  </section>
+
+  <!-- AÇÕES -->
+  <section class="admin-actions">
+    <h2>Gerenciamento</h2>
+
+    <a href="/admin/servicos" class="btn-primary">
+      Gerenciar serviços
+    </a>
+
+    <a href="/admin/barbeiros" class="btn-secondary">
+      Gerenciar barbeiros
+    </a>
+
+    <a href="/admin/horarios" class="btn-secondary">
+      Gerenciar horários
+    </a>
+
+    <a href="/admin/agendamentos" class="btn-secondary">
+      Ver agendamentos
+    </a>
+  </section>
+
+  <!-- HOJE -->
+  <section class="admin-today">
+    <h2>Hoje</h2>
+    <ul>
+      <li>📅 {{ agendamentos_hoje or 0 }} agendamentos marcados</li>
+      <li>⏳ {{ total_pendentes or 0 }} pendente(s)</li>
+    </ul>
+  </section>
+
+</section>
+
+{% endblock %}

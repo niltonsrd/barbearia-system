@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Escolher barbeiro{% endblock %}
+
+{% block content %}
+<section class="fade-in">
+
+    <h1>Escolha o barbeiro</h1>
+    <p class="muted">Selecione quem vai te atender</p>
+
+    {% if barbeiros %}
+    <form method="POST" class="agenda-list">
+
+        {% for b in barbeiros %}
+        <label class="agenda-card">
+            <input type="radio" name="barbeiro_id" value="{{ b.id }}" required>
+        
+            <div class="barber-card">
+        
+                <div class="barber-avatar">
+                    {% if b.foto %}
+                    <img src="{{ url_for('static', filename='uploads/barbeiros/' ~ b.foto) }}" alt="{{ b.nome }}">
+                    {% else %}
+                    <span>{{ b.nome[0]|upper }}</span>
+                    {% endif %}
+                </div>
+        
+                <div class="barber-info">
+                    <strong>{{ b.nome }}</strong>
+                    <small>✂️ Disponível para atendimento</small>
+                </div>
+        
+                <div class="barber-check"></div>
+        
+            </div>
+        </label>
+
+        {% endfor %}
+
+        <button type="submit" class="btn-primary">
+            Continuar →
+        </button>
+        <button type="button" class="btn-primary" onclick="window.location.href='{{ voltar_url }}'">
+            ← Voltar
+        </button>
+
+    </form>
+
+    {% else %}
+    <!-- EMPTY STATE -->
+    <div class="empty-state">
+        <div class="empty-icon">✂️</div>
+        <h3>Nenhum barbeiro disponível</h3>
+        <p>No momento não há barbeiros ativos para atendimento.</p>
+        <p class="muted">Tente novamente mais tarde.</p>
+
+        <button class="btn primary full" disabled>
+            Continuar →
+        </button>
+    </div>
+    {% endif %}
+
+</section>
+{% endblock %}

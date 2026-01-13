@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Entrar • BarberPro{% endblock %}
+
+{% block content %}
+
+<section class="hero-saas login">
+
+  <!-- topo -->
+  <div class="hero-top">
+    BarberPro
+  </div>
+
+  <!-- conteúdo -->
+  <div class="hero-content">
+
+    <h1>Seu próximo corte começa aqui</h1>
+    <p>
+      Entre para agendar e gerenciar seus horários
+      com barbeiros profissionais.
+    </p>
+
+    <form method="POST" class="login-card">
+
+      <input type="email" name="email" placeholder="Email" required>
+
+      <input type="password" name="senha" placeholder="Senha" required>
+
+      <button type="submit" class="btn-primary">
+        Entrar →
+      </button>
+
+    </form>
+
+    <p class="muted center" style="margin-top:14px">
+      Não tem conta?
+      <a href="/cadastro">Criar agora</a>
+    </p>
+
+  </div>
+
+</section>
+
+{% endblock %}
